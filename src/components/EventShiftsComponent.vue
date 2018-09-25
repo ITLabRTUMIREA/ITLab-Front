@@ -36,6 +36,9 @@
                     <b-col>
                       Место #{{ placeIndex + 1}} | {{ getPlaceTargetParticipantsCount(place) }}
                     </b-col>
+                    <b-col>
+                      {{ getPlaceTargetavAilableParticipantsCount(place) }}
+                    </b-col>
                   </b-row>
                   <b-row v-if="place.description">
                     <b-col>
@@ -733,6 +736,44 @@ export default class EventShiftsComponent extends Vue {
       'участников'
     ]);
     return `${nounNeed} ${place.targetParticipantsCount} ${nounParticipant}`;
+  }
+
+  public getPlaceTargetavAilableParticipantsCount(place: IEventPlace): string {
+
+    if (place.targetParticipantsCount === 0) {
+      return '';
+    }
+
+    let availableCountParticipaint = place.targetParticipantsCount - place.wishers.length - place.invited.length
+     - place.participants.length;
+
+    if (availableCountParticipaint === 0) {
+      return 'Участников досаточно';
+    }
+    let nounNeed: string;
+    let nounParticipant: string;
+    if (availableCountParticipaint > 0) {
+    nounNeed = getNounDeclension(availableCountParticipaint, [
+      'Необходим',
+      'Необходимо',
+      'Необходимо'
+    ]);
+    nounParticipant = getNounDeclension(availableCountParticipaint, [
+    'участник',
+    'участника',
+    'участников'
+    ]);
+    } else {
+    nounNeed = 'Перебор:';
+    nounParticipant = getNounDeclension(availableCountParticipaint, [
+    'участник',
+    'участника',
+    'участников'
+    ]);
+    availableCountParticipaint *= -1;
+    }
+
+    return `${nounNeed} ${availableCountParticipaint} ${nounParticipant}`;
   }
 
   public onEditPlace(shift: IEventShift, placeIndex?: number) {
