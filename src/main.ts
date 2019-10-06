@@ -92,7 +92,6 @@ axios.get(`${window.location.origin}/config.json`)
       automaticSilentRenew: true,
       silent_redirect_uri: configuration.VUE_APP_SILENT_REDIRECT_URI
     }));
-
     Vue.prototype.$userManager = userManager;
     new Vue({
       store,
