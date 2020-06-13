@@ -17,7 +17,7 @@
     "bootstrap-vue": "^2.0.0-rc.16",
     "moment-timezone": "^0.5.23",
     "oidc-client": "^1.8.2",
-    "trello": "^0.9.1",
+    "trello": "^0.10.0",
     "vue": "^2.5.21",
     "vue-autosize": "^1.0.2",
     "vue-awesome": "^3.2.0",
