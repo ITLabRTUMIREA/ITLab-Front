@@ -38,7 +38,7 @@
     "vuex-typescript": "^3.0.2"
   },
   "devDependencies": {
-    "@types/jest": "^23.3.10",
+    "@types/jest": "^26.0.0",
     "@vue/cli-plugin-typescript": "^3.5.3",
     "@vue/cli-service": "^3.5.3",
     "@vue/test-utils": "^1.0.0-beta.27",
