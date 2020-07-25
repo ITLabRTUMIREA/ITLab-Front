@@ -1,4 +1,7 @@
 module.exports = {
+  devServer: {
+    disableHostCheck: true
+  },
   productionSourceMap: false,
   configureWebpack: (config) => {
     optimization: {
