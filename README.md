@@ -10,7 +10,16 @@ Develop | Master
 npm install
 ```
 
-Then create config file with name `config.json` in the project root with the following content
+Then create config file with name `config.json` in the `public` directory with the following content
+
+Use Cake task to creating that file, each parameter can be setup, using CLI argument in camel case. For VUE_APP_CLIENT_ID_ -> -clientId=some_client_id. For VUE_APP_POST_LOGOUT_REDIRECT_URL -> postLogOutRedirectUrl etc.
+Powershell:
+```powershell
+./build.ps1 -t GenAppSettings
+```
+And Bash:
+```sh
+.\build.sh -t GenAppSettings
 ```
 VUE_APP_AUTHORITY=https://path.to.authrorization.service # path to your authority OIDC service
 VUE_APP_CLIENT_ID="id"                                   # client application's identifier as registered with the OIDC

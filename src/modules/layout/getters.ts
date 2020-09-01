@@ -13,6 +13,7 @@ export const getters: GetterTree<ILayoutState, RootState> = {
             page.meta = {};
           }
           page.meta.parentSection = section.name;
+          page.meta.isAnotherFrontEnd = section.anotherFrontEnd;
         });
         result = result.concat(section.pages);
       });

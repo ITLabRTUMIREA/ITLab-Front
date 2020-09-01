@@ -1,9 +1,7 @@
+import './set-public-path';
 import Vue from 'vue';
+import singleSpaVue from 'single-spa-vue';
 
-// Plugins initialization //
-///////////////////////////
-
-// VueMoment
 import VueMoment from 'vue-moment';
 import 'moment/locale/ru';
 import moment from 'moment-timezone';
@@ -79,25 +77,114 @@ function initConfiguration(data: any): void {
 }
 
 // Loading runtime configuration
-axios.get(`${window.location.origin}/config.json`)
-  .then((a: any) => {
+// function getUserManagerConfiguration() {
 
-    initConfiguration(a.data);
-    const userManager = new UserManager(new Oidc.UserManager({
-      authority: configuration.VUE_APP_AUTHORITY,
-      client_id: configuration.VUE_APP_CLIENT_ID,
-      redirect_uri: configuration.VUE_APP_REDIRECT_URI,
-      response_type: configuration.VUE_APP_RESPONSE_TYPE,
-      scope: configuration.VUE_APP_SCOPE,
-      post_logout_redirect_uri: configuration.VUE_APP_POST_LOGOUT_REDIRECT_URI,
-      automaticSilentRenew: true,
-      silent_redirect_uri: configuration.VUE_APP_SILENT_REDIRECT_URI
-    }));
+//   let temp: any = null;
+//   console.log("AXIOS");
+  
+//   axios.get(`http://localhost:8081/config.json`)
+//   .then((a: any) => {
+//     console.log("THEN");
+    
+//     initConfiguration(a.data);
+//     const userManager = new UserManager(new Oidc.UserManager({
+//       authority: configuration.VUE_APP_AUTHORITY,
+//       client_id: configuration.VUE_APP_CLIENT_ID,
+//       redirect_uri: configuration.VUE_APP_REDIRECT_URI,
+//       response_type: configuration.VUE_APP_RESPONSE_TYPE,
+//       scope: configuration.VUE_APP_SCOPE,
+//       post_logout_redirect_uri: configuration.VUE_APP_POST_LOGOUT_REDIRECT_URI,
+//       automaticSilentRenew: true,
+//       silent_redirect_uri: configuration.VUE_APP_SILENT_REDIRECT_URI
+//     }));
 
-    Vue.prototype.$userManager = userManager;
-    new Vue({
-      store,
-      router: router(userManager),
-      render: (h) => h(App)
-    }).$mount('#app');
-  });
+//     Vue.prototype.$userManager = userManager;
+//     temp = userManager;
+//   });
+//   console.log("RETURN");
+  
+//   return temp;
+// }
+
+let userManager!: any;
+
+let xhr = new XMLHttpRequest();
+xhr.open('GET', 'http://localhost:8081/config.json', false);
+xhr.send();
+
+if (xhr.status != 200) {
+  console.log( xhr.status + ': ' + xhr.statusText ); // пример вывода: 404: Not Found
+} else {
+  let jsonResponse = JSON.parse(xhr.response)
+
+  initConfiguration(jsonResponse);
+   userManager = new UserManager(new Oidc.UserManager({
+     authority: configuration.VUE_APP_AUTHORITY,
+     client_id: configuration.VUE_APP_CLIENT_ID,
+     redirect_uri: configuration.VUE_APP_REDIRECT_URI,
+     response_type: configuration.VUE_APP_RESPONSE_TYPE,
+     scope: configuration.VUE_APP_SCOPE,
+     post_logout_redirect_uri: configuration.VUE_APP_POST_LOGOUT_REDIRECT_URI,
+     automaticSilentRenew: true,
+     silent_redirect_uri: configuration.VUE_APP_SILENT_REDIRECT_URI
+   }));
+}
+
+// (async function(){
+//   console.log("AXIOS");
+//   let response = await axios.get(`http://localhost:8081/config.json`);
+//   console.log("AFTER AXIOS");
+//   console.log("RESPONSE " + response);
+  
+  
+//   initConfiguration(response.data);
+//   userManager = new UserManager(new Oidc.UserManager({
+//     authority: configuration.VUE_APP_AUTHORITY,
+//     client_id: configuration.VUE_APP_CLIENT_ID,
+//     redirect_uri: configuration.VUE_APP_REDIRECT_URI,
+//     response_type: configuration.VUE_APP_RESPONSE_TYPE,
+//     scope: configuration.VUE_APP_SCOPE,
+//     post_logout_redirect_uri: configuration.VUE_APP_POST_LOGOUT_REDIRECT_URI,
+//     automaticSilentRenew: true,
+//     silent_redirect_uri: configuration.VUE_APP_SILENT_REDIRECT_URI
+//   }));
+//   console.log(userManager);
+  
+// })();
+// axios.get(`http://localhost:8081/config.json`)
+//   .then((a: any) => {
+//     console.log("THEN");
+    
+//     initConfiguration(a.data);
+//     userManager = new UserManager(new Oidc.UserManager({
+//       authority: configuration.VUE_APP_AUTHORITY,
+//       client_id: configuration.VUE_APP_CLIENT_ID,
+//       redirect_uri: configuration.VUE_APP_REDIRECT_URI,
+//       response_type: configuration.VUE_APP_RESPONSE_TYPE,
+//       scope: configuration.VUE_APP_SCOPE,
+//       post_logout_redirect_uri: configuration.VUE_APP_POST_LOGOUT_REDIRECT_URI,
+//       automaticSilentRenew: true,
+//       silent_redirect_uri: configuration.VUE_APP_SILENT_REDIRECT_URI
+//     }));
+
+//     Vue.prototype.$userManager = userManager;
+//   });
+
+// const userManager = getUserManagerConfiguration();
+
+Vue.prototype.$userManager = userManager;
+
+Vue.config.productionTip = false;
+
+const vueLifecycles = singleSpaVue({
+  Vue,
+  appOptions: {
+    render: (h: any) => h(App),
+    router: router(userManager),
+    store,
+  },
+});
+
+export const bootstrap = vueLifecycles.bootstrap;
+export const mount = vueLifecycles.mount;
+export const unmount = vueLifecycles.unmount;

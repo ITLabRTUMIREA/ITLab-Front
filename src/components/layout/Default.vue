@@ -4,10 +4,16 @@
     <template v-if="isAuthorized">
       <sidebar />
     </template>
-
-    <div class="content-wrapper">
-      <router-view />
-    </div>
+    <template v-if="isAnotherFrontEnd">
+      <div class="content-wrapper-another-front">
+        <router-view />
+      </div>
+    </template>
+    <template v-else>
+      <div class="content-wrapper">
+        <router-view />
+      </div>
+    </template>
   </div>
 </template>
 
@@ -47,6 +53,9 @@ export default class Default extends Vue {
     //     console.log(await this.$userManager.signedIn());
     //   });
     // }
+  }
+  get isAnotherFrontEnd(): boolean {
+    return this.$route.meta.isAnotherFrontEnd;
   }
 }
 </script>
