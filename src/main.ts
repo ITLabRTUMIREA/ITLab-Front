@@ -109,7 +109,7 @@ function initConfiguration(data: any): void {
 let userManager!: any;
 
 let xhr = new XMLHttpRequest();
-xhr.open('GET', 'http://localhost:8081/config.json', false);
+xhr.open('GET', 'http://localhost:8080/config.json', false);
 xhr.send();
 
 if (xhr.status != 200) {
