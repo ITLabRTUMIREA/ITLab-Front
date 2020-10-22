@@ -55,9 +55,14 @@ export default class ProjectsPage extends Vue {
 }
 
 export const projectsPageRoute: RouteConfig = {
-  path: '/projects/*',
+  path: '/projects',
   name: 'ProjectsPage',
-  component: ProjectsPage
+  component: ProjectsPage,
+  children: [
+    {
+      path: '*'
+    }
+  ]
 };
 </script>
 <!-- SCRIPT END -->
