@@ -3,7 +3,7 @@
   <div class="projects-page">
     <page-content>
       <template slot="header">Проекты</template>
-      
+
       <div id="single-spa-application:projects"></div>
     </page-content>
   </div>
@@ -55,7 +55,7 @@ export default class ProjectsPage extends Vue {
 }
 
 export const projectsPageRoute: RouteConfig = {
-  path: '/projects',
+  path: '/projects/*',
   name: 'ProjectsPage',
   component: ProjectsPage
 };
