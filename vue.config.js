@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = {
   productionSourceMap: false,
   configureWebpack: (config) => {
@@ -14,5 +16,6 @@ module.exports = {
         return args;
       });
     }
-  }
+  },
+  outputDir: path.resolve(__dirname, './deploy/ITLab-Front')
 };
