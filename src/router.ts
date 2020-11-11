@@ -11,7 +11,7 @@ Vue.use(Router);
 
 // Initialize axios
 axios.defaults.baseURL =
-  localStorage.getItem('api-url') || process.env.VUE_APP_API_URL || '/api/';
+  process.env.VUE_APP_API_URL || localStorage.getItem('api-url') || '/api/';
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 // Initialize router
