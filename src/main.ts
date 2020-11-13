@@ -81,11 +81,11 @@ function initConfiguration(data: any): void {
 
 //   let temp: any = null;
 //   console.log("AXIOS");
-  
+
 //   axios.get(`http://localhost:8081/config.json`)
 //   .then((a: any) => {
 //     console.log("THEN");
-    
+
 //     initConfiguration(a.data);
 //     const userManager = new UserManager(new Oidc.UserManager({
 //       authority: configuration.VUE_APP_AUTHORITY,
@@ -102,32 +102,32 @@ function initConfiguration(data: any): void {
 //     temp = userManager;
 //   });
 //   console.log("RETURN");
-  
+
 //   return temp;
 // }
 
 let userManager!: any;
 
 let xhr = new XMLHttpRequest();
-xhr.open('GET', 'http://localhost:9001/config.json', false);
+xhr.open('GET', 'config.json', false); // TODO fix path to config, or load from root proxy
 xhr.send();
 
 if (xhr.status != 200) {
-  console.log( xhr.status + ': ' + xhr.statusText ); // пример вывода: 404: Not Found
+  console.log(xhr.status + ': ' + xhr.statusText);
 } else {
   let jsonResponse = JSON.parse(xhr.response)
 
   initConfiguration(jsonResponse);
-   userManager = new UserManager(new Oidc.UserManager({
-     authority: configuration.VUE_APP_AUTHORITY,
-     client_id: configuration.VUE_APP_CLIENT_ID,
-     redirect_uri: configuration.VUE_APP_REDIRECT_URI,
-     response_type: configuration.VUE_APP_RESPONSE_TYPE,
-     scope: configuration.VUE_APP_SCOPE,
-     post_logout_redirect_uri: configuration.VUE_APP_POST_LOGOUT_REDIRECT_URI,
-     automaticSilentRenew: true,
-     silent_redirect_uri: configuration.VUE_APP_SILENT_REDIRECT_URI
-   }));
+  userManager = new UserManager(new Oidc.UserManager({
+    authority: configuration.VUE_APP_AUTHORITY,
+    client_id: configuration.VUE_APP_CLIENT_ID,
+    redirect_uri: configuration.VUE_APP_REDIRECT_URI,
+    response_type: configuration.VUE_APP_RESPONSE_TYPE,
+    scope: configuration.VUE_APP_SCOPE,
+    post_logout_redirect_uri: configuration.VUE_APP_POST_LOGOUT_REDIRECT_URI,
+    automaticSilentRenew: true,
+    silent_redirect_uri: configuration.VUE_APP_SILENT_REDIRECT_URI
+  }));
 }
 
 // (async function(){
@@ -135,8 +135,8 @@ if (xhr.status != 200) {
 //   let response = await axios.get(`http://localhost:8081/config.json`);
 //   console.log("AFTER AXIOS");
 //   console.log("RESPONSE " + response);
-  
-  
+
+
 //   initConfiguration(response.data);
 //   userManager = new UserManager(new Oidc.UserManager({
 //     authority: configuration.VUE_APP_AUTHORITY,
@@ -149,12 +149,12 @@ if (xhr.status != 200) {
 //     silent_redirect_uri: configuration.VUE_APP_SILENT_REDIRECT_URI
 //   }));
 //   console.log(userManager);
-  
+
 // })();
 // axios.get(`http://localhost:8081/config.json`)
 //   .then((a: any) => {
 //     console.log("THEN");
-    
+
 //     initConfiguration(a.data);
 //     userManager = new UserManager(new Oidc.UserManager({
 //       authority: configuration.VUE_APP_AUTHORITY,

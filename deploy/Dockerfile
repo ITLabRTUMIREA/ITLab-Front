@@ -10,4 +10,4 @@ COPY /ITLab-Front /app
 
 COPY nginx.conf /etc/nginx/nginx.conf
 
-CMD /scripts/fillConfig.sh > /app/config.json && nginx
+CMD /scripts/fillConfig.sh > /app/config.json && cat /app/config.json && nginx
