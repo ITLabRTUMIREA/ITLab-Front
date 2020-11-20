@@ -109,7 +109,7 @@ function initConfiguration(data: any): void {
 let userManager!: any;
 
 let xhr = new XMLHttpRequest();
-xhr.open('GET', 'front/front/config.json', false); // TODO fix path to config, or load from root proxy
+xhr.open('GET', '/front/front/config.json', false); // TODO fix path to config, or load from root proxy
 xhr.send();
 
 if (xhr.status != 200) {
