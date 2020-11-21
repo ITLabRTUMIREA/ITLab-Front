@@ -4,7 +4,7 @@
     <page-content>
       <template slot="header">Проекты</template>
 
-      <div id="single-spa-application:projects"></div>
+      <div id="projects-page"></div>
     </page-content>
   </div>
 </template>

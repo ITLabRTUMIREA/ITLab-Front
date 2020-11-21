@@ -4,12 +4,7 @@
     <template v-if="isAuthorized">
       <sidebar />
     </template>
-    <template v-if="isAnotherFrontEnd">
-      <div class="content-wrapper-another-front">
-        <router-view />
-      </div>
-    </template>
-    <template v-else>
+    <template>
       <div class="content-wrapper">
         <router-view />
       </div>
