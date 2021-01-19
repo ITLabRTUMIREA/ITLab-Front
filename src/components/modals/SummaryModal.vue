@@ -93,8 +93,8 @@ export default class CSummaryModal extends Vue {
   public options: Array<{ text: string; value: string }> = [];
   public selected: string[] = [];
 
-  public startDate: string = '';
-  public endDate: string = ''; 
+  public startDate: Date = new Date();
+  public endDate: Date = new Date(); 
 
   public byType: boolean = true;
 
@@ -104,8 +104,8 @@ export default class CSummaryModal extends Vue {
   //////////////////////
 
   public mounted() {
-    this.startDate = new Date().toISOString();
-    this.endDate = new Date(new Date().setUTCFullYear(new Date().getUTCFullYear() - 1)).toISOString();
+    this.endDate = new Date();
+    this.startDate = new Date(new Date().setUTCFullYear(new Date().getUTCFullYear() - 1));
 
     this.$watch('value', (value: boolean) => {
       this.visibilityStuff = value;
@@ -126,8 +126,8 @@ export default class CSummaryModal extends Vue {
 
   public setMode(byType: boolean) {
     if (byType === true) {
-      this.startDate = new Date().toISOString();
-      this.endDate = new Date(new Date().setUTCFullYear(new Date().getUTCFullYear() - 1)).toISOString();
+      this.endDate = new Date();
+      this.startDate = new Date(new Date().setUTCFullYear(new Date().getUTCFullYear() - 1));
     }
     else {
       this.selected = [];
@@ -176,6 +176,7 @@ export default class CSummaryModal extends Vue {
           })
           .catch((error) => {
             console.log(error);
+            this.isModalInProcess = false;
             reject(error);
           });
       });
@@ -188,7 +189,7 @@ export default class CSummaryModal extends Vue {
         }
 
         axios
-          .get(`docsgen/downloadxls?begin=${this.startDate.slice(0, 10)}&end=${this.startDate.slice(0, 10)}${types}`,
+          .get(`docsgen/downloadxls?begin=${this.startDate.toISOString().slice(0, 10)}&end=${this.endDate.toISOString().slice(0, 10)}${types}`,
             {
               responseType: 'blob'
             }
@@ -217,6 +218,7 @@ export default class CSummaryModal extends Vue {
           })
           .catch((error) => {
             console.log(error);
+            this.isModalInProcess = false;
             reject(error);
           });
       });
