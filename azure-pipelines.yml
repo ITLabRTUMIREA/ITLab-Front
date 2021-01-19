@@ -12,10 +12,9 @@ steps:
   inputs:
     command: "custom"
     customCommand: "ci"
-- script: chmod +x ./build.sh
-  displayName: chmod build script
-- script: ./build.sh
-  displayName: build app
+- task: Bash@3
+  inputs:
+    filePath: "build.sh"
 - task: PublishBuildArtifacts@1
   displayName: publish build artifact itlab-front-build
   inputs:
