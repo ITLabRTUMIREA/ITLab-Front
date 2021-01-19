@@ -12,7 +12,7 @@ steps:
   inputs:
     command: "custom"
     customCommand: "ci"
-- script: chmox +x ./build.sh
+- script: chmod +x ./build.sh
   displayName: chmod build script
 - script: ./build.sh
   displayName: build app
