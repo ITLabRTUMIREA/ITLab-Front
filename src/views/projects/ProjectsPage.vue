@@ -46,12 +46,6 @@ export default class ProjectsPage extends Vue {
   public projects: any[] = [];
 
   private canEditUserPropertyTypes: boolean | null = false;
-
-  // Component methods //
-  //////////////////////
-
-  public async mounted() {
-  }
 }
 
 export const projectsPageRoute: RouteConfig = {
