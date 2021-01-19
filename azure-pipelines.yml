@@ -5,16 +5,19 @@ trigger:
 name: $(BuildID)-$(Build.SourceBranchName)
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: "ubuntu-latest"
 steps:
 - task: Npm@1
   displayName: npm ci
   inputs:
-    command: 'custom'
-    customCommand: 'ci'
+    command: "custom"
+    customCommand: "ci"
+- script: chmox +x ./build.sh
+  displayName: chmod build script
 - script: ./build.sh
+  displayName: build app
 - task: PublishBuildArtifacts@1
   displayName: publish build artifact itlab-front-build
   inputs:
-    PathtoPublish: 'deploy'
-    ArtifactName: 'itlab-front-build'
+    PathtoPublish: "deploy"
+    ArtifactName: "itlab-front-build"
