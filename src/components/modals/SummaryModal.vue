@@ -94,7 +94,7 @@ export default class CSummaryModal extends Vue {
   public selected: string[] = [];
 
   public startDate: Date = new Date();
-  public endDate: Date = new Date(); 
+  public endDate: Date = new Date();
 
   public byType: boolean = true;
 
@@ -128,8 +128,7 @@ export default class CSummaryModal extends Vue {
     if (byType === true) {
       this.endDate = new Date();
       this.startDate = new Date(new Date().setUTCFullYear(new Date().getUTCFullYear() - 1));
-    }
-    else {
+    } else {
       this.selected = [];
     }
 
@@ -180,11 +179,10 @@ export default class CSummaryModal extends Vue {
             reject(error);
           });
       });
-    }
-    else {
+    } else {
       return new Promise((resolve, reject) => {
         let types = '';
-        for (let S of this.selected) {
+        for (const S of this.selected) {
           types += `&eventTypeId=${S}`;
         }
 
