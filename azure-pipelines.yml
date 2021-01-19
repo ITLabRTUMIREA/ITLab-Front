@@ -12,9 +12,9 @@ steps:
   inputs:
     command: "custom"
     customCommand: "ci"
-- task: Bash@3
+- task: PowerShell@2
   inputs:
-    filePath: "build.sh"
+    filePath: build.ps1
 - task: PublishBuildArtifacts@1
   displayName: publish build artifact itlab-front-build
   inputs:
