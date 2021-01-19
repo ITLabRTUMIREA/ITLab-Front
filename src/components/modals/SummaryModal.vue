@@ -20,7 +20,16 @@
       
       <b-form-group label="Выберите тип:">
         <h5 v-if="options.length === 0">Нет событий.</h5>
+        <b-form-checkbox v-else
+          :indeterminate="indeterminate"
+          v-model="allSelected"
+          @change="toggleAll"
+        >
+          Выбрать всё
+        </b-form-checkbox>
+
         <b-form-checkbox-group
+          id="selected"
           stacked
           v-model="selected"
           :options="options"
@@ -50,7 +59,7 @@
 <!-- SCRIPT BEGIN -->
 <script lang="ts">
 import axios from 'axios';
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import { IEventType, EVENT_TYPES_FETCH_ALL } from '@/modules/events';
 import DatePicker from 'vue2-datepicker';
 
@@ -81,6 +90,9 @@ export default class CSummaryModal extends Vue {
 
   private visibilityStuff: boolean = false;
 
+  private allSelected: boolean = false;
+  private indeterminate: boolean = false;
+
   // Component methods //
   //////////////////////
 
@@ -102,8 +114,30 @@ export default class CSummaryModal extends Vue {
       });
   }
 
+  @Watch('selected')
+  onSelectedChanged(val: Array<string>, oldVal: Array<string>) {
+    if (val.length === 0) {
+      this.allSelected = false;
+      this.indeterminate = false;
+    } else if (val.length === this.options.length) {
+      this.allSelected = true;
+      this.indeterminate = false;
+    } else {
+      this.allSelected = false;
+      this.indeterminate = true;
+    }
+  }
+
   // Methods //
   ////////////
+
+  private toggleAll(checked: boolean) {
+    let values: Array<string> = [];
+
+    this.options.forEach(option => values.push(option.value));
+
+    this.selected = checked ? values.slice() : [];
+  }
 
   public async onSubmitModal() {
     this.isModalInProcess = true;
