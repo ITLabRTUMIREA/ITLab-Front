@@ -17,6 +17,7 @@ export interface ISection {
   homeURL: RawLocation;
   pages: RouteConfig[];
   badgeText?: string;
+  anotherFrontEnd?: boolean;
 }
 
 // Group //

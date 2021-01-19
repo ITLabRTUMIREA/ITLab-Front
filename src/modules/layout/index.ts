@@ -106,7 +106,8 @@ export const state: ILayoutState = {
           name: 'projects',
           title: 'Проекты (в разработке)',
           homeURL: '/projects',
-          pages: [projectsPageRoute, projectEditPageRoute]
+          pages: [projectsPageRoute, projectEditPageRoute],
+          anotherFrontEnd: true
         },
         {
           name: 'reports',

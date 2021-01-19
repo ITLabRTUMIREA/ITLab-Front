@@ -77,10 +77,15 @@ body {
   height: inherit;
   min-height: inherit;
   width: 100%;
-  min-height: 100vh;
 
   .layout {
-    min-height: 100vh;
+
+    .content-wrapper-another-front {
+      position: fixed;
+      top: 0;
+      padding-top: 50px;
+      width: 100%;
+    }
 
     .content-wrapper {
       min-height: 100vh;

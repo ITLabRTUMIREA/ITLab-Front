@@ -39,6 +39,7 @@ export class UserManager {
     if (!user) {
       return null;
     }
+    localStorage.setItem('accessToken', user.access_token);
     return user.access_token;
   }
 

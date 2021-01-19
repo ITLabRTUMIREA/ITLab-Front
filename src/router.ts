@@ -6,12 +6,13 @@ import store from '@/store';
 
 import { LAYOUT_PAGES_GET } from '@/modules/layout';
 import { UserManager } from './UserManager';
+import configuration from './stuff/configuration';
 
 Vue.use(Router);
 
 // Initialize axios
 axios.defaults.baseURL =
-  localStorage.getItem('api-url') || process.env.VUE_APP_API_URL || '/api/';
+  configuration.VUE_APP_API_URL || localStorage.getItem('api-url') || '/api/';
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 // Initialize router

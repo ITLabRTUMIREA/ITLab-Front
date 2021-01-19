@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = {
   devServer: {
     disableHostCheck: true
@@ -17,5 +19,6 @@ module.exports = {
         return args;
       });
     }
-  }
+  },
+  outputDir: path.resolve(__dirname, './deploy/ITLab-Front')
 };

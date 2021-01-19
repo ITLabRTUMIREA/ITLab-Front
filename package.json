@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "vue-cli-service serve --port 5500",
-    "serve": "vue-cli-service serve --port 5500",
+    "start": "npm run serve",
+    "serve": "vue-cli-service serve --port 9001",
     "build": "vue-cli-service build",
-    "developbuild": "vue-cli-service build --mode development",
+    "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
-    "test:unit": "vue-cli-service test:unit"
+    "developbuild": "vue-cli-service build --mode development"
   },
   "dependencies": {
     "@types/hammerjs": "^2.0.36",
@@ -18,6 +18,9 @@
     "bootstrap-vue": "^2.0.0-rc.16",
     "moment-timezone": "^0.5.23",
     "oidc-client": "^1.8.2",
+    "single-spa": "^5.5.4",
+    "single-spa-vue": "^1.5.2",
+    "systemjs-webpack-interop": "^1.1.0",
     "trello": "^0.9.1",
     "vue": "^2.5.21",
     "vue-autosize": "^1.0.2",
@@ -43,10 +46,11 @@
     "@vue/cli-plugin-typescript": "^3.5.3",
     "@vue/cli-service": "^3.5.3",
     "@vue/test-utils": "^1.0.0-beta.27",
-    "node-sass": "^4.13.1",
+    "node-sass": "^4.14.1",
     "sass-loader": "^7.0.1",
     "ts-jest": "^23.10.5",
     "typescript": "^3.2.2",
+    "vue-cli-plugin-single-spa": "~1.1.2",
     "vue-template-compiler": "^2.5.21"
   }
 }
