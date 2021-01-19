@@ -10,11 +10,12 @@ steps:
 - task: Npm@1
   displayName: npm ci
   inputs:
-    command: "custom"
-    customCommand: "ci"
-- task: PowerShell@2
+    command: 'ci'
+- task: Npm@1
+  displayName: npm run build
   inputs:
-    filePath: build.ps1
+    command: 'custom'
+    customCommand: 'run build'
 - task: PublishBuildArtifacts@1
   displayName: publish build artifact itlab-front-build
   inputs:
