@@ -6,18 +6,59 @@ name: $(BuildID)-$(Build.SourceBranchName)
 
 pool:
   vmImage: "ubuntu-latest"
-steps:
-- task: Npm@1
-  displayName: npm ci
-  inputs:
-    command: 'ci'
-- task: Npm@1
-  displayName: npm run build
-  inputs:
-    command: 'custom'
-    customCommand: 'run build'
-- task: PublishBuildArtifacts@1
-  displayName: publish build artifact itlab-front-build
-  inputs:
-    PathtoPublish: "deploy"
-    ArtifactName: "itlab-front-build"
+
+stages:
+- stage: Build
+  jobs:
+  - job: BuildApp
+    steps:
+    - task: Npm@1
+      displayName: npm ci
+      inputs:
+        command: 'ci'
+    - task: Npm@1
+      displayName: npm run build
+      inputs:
+        command: 'custom'
+        customCommand: 'run build'
+    - task: PublishBuildArtifacts@1
+      displayName: publish build artifact itlab-front-build
+      inputs:
+        PathtoPublish: "deploy"
+        ArtifactName: "itlab-front-build"
+- stage: PackInDocker
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  jobs:
+  - job: PackFront
+    steps:
+      - checkout: none
+      - download: current
+        artifact: itlab-front-build
+      - task: Docker@2
+        inputs:
+          containerRegistry: 'rtuitlab connection by admin'
+          repository: 'rtuitlab/itlab-front'
+          command: 'buildAndPush'
+          Dockerfile: '$(Pipeline.Workspace)/itlab-front-build/Dockerfile'
+          buildContext: '$(Pipeline.Workspace)/itlab-front-build'
+          tags: |
+            $(Build.BuildId)
+            latest
+- stage: UpdateService
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  jobs:
+  - deployment: Deploy
+    pool:
+      vmImage: 'ubuntu-latest'
+    environment: 'production'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            - download: none
+            - task: SSH@0
+              inputs:
+                sshEndpoint: 'swarm manager'
+                runOptions: 'commands'
+                commands: 'docker service update --image rtuitlab/itlab-front:$(Build.BuildId) itlab_front'
+                readyTimeout: '20000'
