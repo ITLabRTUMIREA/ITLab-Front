@@ -46,6 +46,9 @@ import { projectsPageRoute, projectEditPageRoute } from '@/views/projects';
 // @ts-ignore
 import { profilePageRoute } from '@/views/profile';
 
+// @ts-ignore
+import { reportsPageRoute } from '@/views/reports';
+
 
 import {
   // @ts-ignore
@@ -57,9 +60,7 @@ import {
   // @ts-ignore,
   typeEditPageRoute,
   // @ts-ignore
-  backendSelectionPageRoute,
-  // @ts-ignore
-  reportsPageRoute
+  backendSelectionPageRoute
 } from '@/views/system';
 
 export const state: ILayoutState = {
