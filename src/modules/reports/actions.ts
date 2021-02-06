@@ -59,7 +59,7 @@ export const actions: ActionTree<IReportState, RootState> = {
 
       const request = reportData.id
         ? axios.put(`reports/${reportData.id}`)
-        : axios.post('reports', reportData);
+        : axios.post(`reports?implementer=${reportData.assignees.implementer}`, reportData);
 
       request
         .then((response) => getResponseData<IReportTypeDefault>(response))

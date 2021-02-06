@@ -176,7 +176,7 @@ export default class ReportsPage extends Vue {
   get reportsAboutOthers() {
     return (this.$store.getters[REPORTS_GET_ALL] as IReportTypeDefault[]).filter((report) =>
       report.assignees.implementer.indexOf(this.subject) === -1
-        && report.assignees.implementer.indexOf(this.subject) !== -1
+        && report.assignees.reporter.indexOf(this.subject) !== -1
     );
   }
 
