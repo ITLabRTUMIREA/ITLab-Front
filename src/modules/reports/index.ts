@@ -10,7 +10,8 @@ import { IReportState } from './types';
 export * from './types';
 
 export const state: IReportState = {
-  reports: []
+  reports: [],
+  files: []
 };
 
 export const reports: Module<IReportState, RootState> = {

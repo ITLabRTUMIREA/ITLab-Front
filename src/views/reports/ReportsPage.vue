@@ -25,8 +25,14 @@
           >
           </b-form-input>
           <b-form-textarea
+            id="report"
             rows="10"
             v-model="report"
+            @drop="handleFile"
+            @dragenter="() => changeBorder(true)"
+            @dragleave="() => changeBorder(false)"
+            @dragover="(e) => e.preventDefault()"
+            :class="textareaBorder"
           >
           </b-form-textarea>
 
@@ -63,6 +69,13 @@
         <b-tab title="Прикрепленные файлы">
           <br />
           
+          <b-row v-for="file in files" :key="file.id">
+            <b-col>
+              <file-item
+                :file="file"
+              ></file-item>
+            </b-col>
+          </b-row>
         </b-tab>
       </b-tabs>
     </page-content>
@@ -85,17 +98,27 @@ import {
 } from '../../modules/users';
 
 import {
-  IReportTypeDefault, REPORTS_FETCH_ALL, REPORTS_GET_ALL, REPORT_COMMIT
+  IReportFile,
+  IReportTypeDefault,
+  REPORTS_FETCH_ALL,
+  REPORT_FILES_GET_ALL,
+  REPORTS_GET_ALL,
+  REPORT_COMMIT,
+  REPORT_FILE_COMMIT,
+  REPORT_FILE_FETCH_ALL
 } from '../../modules/reports';
 import CReportItem, { ReportImplementer } from '../../components/ReportItem.vue';
-import { IReportSalary, REPORT_SALARY_FETCH_ALL, REPORT_SALARY_GET_ALL } from '../../modules/salary';
+import { IReportSalary, REPORT_SALARY_FETCH_ALL } from '../../modules/salary';
+import { getResponseData } from '../../stuff';
+import CFileItem from '../../components/FileItem.vue';
 
 const LOCAL_STORAGE_API_URL = 'api-url';
 
 @Component({
   components: {
     'page-content': CPageContent,
-    'report-item': CReportItem
+    'report-item': CReportItem,
+    'file-item': CFileItem
   }
 })
 export default class ReportsPage extends Vue {
@@ -116,6 +139,9 @@ export default class ReportsPage extends Vue {
   public baseAddress: string = location.origin;
   public accessToken?: string | null;
   public filesBaseAddress?: string = configuration.VUE_APP_FILES_BASE_ADDRESS;
+  public filesLoading: boolean = false;
+
+  public border: string = '';
 
   public reportImplementer = {
     Me: ReportImplementer.Me,
@@ -129,12 +155,12 @@ export default class ReportsPage extends Vue {
     Promise.all([
       this.$store.dispatch(USERS_FETCH_ALL),
       this.$store.dispatch(REPORTS_FETCH_ALL),
+      this.$store.dispatch(REPORT_FILE_FETCH_ALL)
     ])
-      .then(async (results) => {
+      .then(async () => {
         this.subject = (await this.$userManager.getUserId()) || '';
         this.loadingInProcess = false;
-        this.$store.dispatch(REPORT_SALARY_FETCH_ALL, this.subject)
-          .then((resp) => console.log(resp));
+        this.$store.dispatch(REPORT_SALARY_FETCH_ALL, this.subject);
       })
       .catch();
 
@@ -167,6 +193,59 @@ export default class ReportsPage extends Vue {
       });
   }
 
+  public async handleFile(e: DragEvent) {
+    e.preventDefault();
+    this.changeBorder(false);
+
+    const files: File[] = [];
+
+    // @ts-ignore
+    if (e.dataTransfer.items) {
+      // @ts-ignore
+      for (const item of e.dataTransfer.items) {
+        if (item.kind === 'file') {
+          files.push(item.getAsFile());
+        }
+      }
+    } else {
+      // @ts-ignore
+      for (const file of e.dataTransfer.files) {
+        if (file) {
+          files.push(file);
+        }
+      }
+    }
+
+    const area = document.getElementById('report') as HTMLTextAreaElement;
+    if (area.selectionStart || area.selectionEnd === 0 && files.length > 0) {
+      this.filesLoading = true;
+
+      const end = area.selectionEnd;
+      for (const file of files) {
+
+        this.report = this.report.substring(0, end) + `\n[Uploading ${file.name}...]()\n`
+          + this.report.substring(end, this.report.length);
+
+        const fileData = (await this.$store.dispatch(REPORT_FILE_COMMIT, file));
+
+        const isImg = /[w]*.(jpg|png|gif)$/.test(fileData.filename.toLowerCase());
+
+        this.report = this.report.replace(
+          `[Uploading ${file.name}...]()`,
+          `${isImg ? '!' : ''}[${fileData.filename}](${this.origin}mfs/download/${fileData.id})`
+        );
+      }
+    }
+  }
+
+  public changeBorder(status: boolean) {
+    if (status) {
+      this.border = 'drop-border';
+    } else {
+      this.border = '';
+    }
+  }
+
   get reportsAboutMe() {
     return (this.$store.getters[REPORTS_GET_ALL] as IReportTypeDefault[]).filter((report) =>
       report.assignees.implementer.indexOf(this.subject) > -1
@@ -182,6 +261,23 @@ export default class ReportsPage extends Vue {
 
   get authors() {
     return this.$store.getters[USERS_GET_ALL_LIST];
+  }
+
+  get files() {
+    return this.$store.getters[REPORT_FILES_GET_ALL];
+  }
+
+  get textareaBorder() {
+    return this.border;
+  }
+
+  get origin(): string {
+    console.log(location.origin);
+    if (location.origin.indexOf(':') > -1) {
+      return localStorage.getItem('api-url') || '';
+    } else {
+      return location.origin + '/api/';
+    }
   }
 }
 
@@ -204,6 +300,10 @@ select {
   > * {
     color: #1e1e1e !important;
   }
+}
+
+.drop-border {
+  box-shadow: -1px 1px 0 #007bff, 1px -1px 0 #007bff, -1px -1px 0 #007bff, 1px 1px 0 #007bff;
 }
 </style>
 <!-- STYLE END -->

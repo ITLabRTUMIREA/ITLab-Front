@@ -14,7 +14,6 @@ export const getters: GetterTree<ISalaryState, RootState> = {
   },
 
   [REPORT_SALARY_GET_ONE]: (state) => (reportId: string) => {
-    console.log(`${reportId}: ${JSON.stringify(state.reportsSalaries.find((salary) => salary.reportId === reportId))}`);
     return state.reportsSalaries.find((salary) => salary.reportId === reportId) || new ReportSalary();
   }
 };
