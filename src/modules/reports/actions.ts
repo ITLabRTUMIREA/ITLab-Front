@@ -17,11 +17,15 @@ import {
   REPORT_FILE_COMMIT,
   REPORT_FILE_FETCH_ALL,
   REPORT_FILE_DELETE,
-  REPORT_FILE_REMOVE
+  REPORT_FILE_REMOVE,
+  REPORT_FETCH_ONE,
+  ReportTypeDefault
 } from './types';
 
 const fixDate = (report: IReportTypeDefault) => {
-  report.date = report.date + 'Z';
+  if (report.date![report.date!.length - 1] !== 'Z') {
+    report.date = report.date + 'Z';
+  }
 };
 
 export const actions: ActionTree<IReportState, RootState> = {
@@ -38,6 +42,21 @@ export const actions: ActionTree<IReportState, RootState> = {
         })
         .catch((error) => {
           console.log(REPORTS_FETCH_ALL, error);
+          reject();
+        });
+    });
+  },
+
+  [REPORT_FETCH_ONE]: ({}, reportId: string) => {
+    return new Promise((resolve, reject) => {
+      axios.get(`reports/${reportId}`)
+        .then((response) => getResponseData<ReportTypeDefault>(response))
+        .then((report) => {
+          fixDate(report);
+          resolve(report);
+        })
+        .catch((error) => {
+          console.log(REPORT_FETCH_ONE, error);
           reject();
         });
     });

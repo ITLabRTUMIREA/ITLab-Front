@@ -29,7 +29,7 @@
       </b-col>
       <b-col md="auto" class="big-buttons" v-if="activeTab === 'write'">
         <label for="attach1"><img class="img-btn" :src="url('svg/editor/attach.svg')" /></label>
-        <input id="attach1" type="file" style="display: none;" @change="test" multiple />
+        <input id="attach1" type="file" style="display: none;" @change="attach" multiple />
       </b-col>
     </b-row>
     <div class="line" />
@@ -50,7 +50,8 @@
         <img class="img-btn" :src="url('svg/editor/task.svg')" @click="() => press('j')" />
       </b-col>
       <b-col sm="auto" cols="auto">
-        <img class="img-btn" :src="url('svg/editor/attach.svg')" @click="() => press('')" />
+        <label for="attach2"><img class="img-btn" :src="url('svg/editor/attach.svg')" /></label>
+        <input id="attach2" type="file" style="display: none;" @change="attach" multiple />
       </b-col>
     </b-row>
     <b-row>
@@ -114,24 +115,6 @@ export default class CMarkdownEditor extends Vue {
 
   // Properties //
   ///////////////
-
-  public test(e: Event) {
-    const files: File[] = [];
-    // @ts-ignore
-    const targrtFiles: FileList = (e.target as HTMLInputElement).files;
-
-    for (let i = 0; i < targrtFiles.length; i++) {
-      if (targrtFiles.item(i)) {
-        // @ts-ignore
-        files.push(targrtFiles.item(i));
-      }
-    }
-
-    this.handleFile(new Event('drag') as DragEvent, files);
-
-    // @ts-ignore
-    (e.target as HTMLInputElement).value = null;
-  }
 
   public report: string = '';
 
@@ -393,6 +376,24 @@ export default class CMarkdownEditor extends Vue {
     this.filesLoading = false;
   }
 
+  public attach(e: Event) {
+    const files: File[] = [];
+    // @ts-ignore
+    const targrtFiles: FileList = (e.target as HTMLInputElement).files;
+
+    for (let i = 0; i < targrtFiles.length; i++) {
+      if (targrtFiles.item(i)) {
+        // @ts-ignore
+        files.push(targrtFiles.item(i));
+      }
+    }
+
+    this.handleFile(new Event('drag') as DragEvent, files);
+
+    // @ts-ignore
+    (e.target as HTMLInputElement).value = null;
+  }
+
   public changeBorder(status: boolean) {
     if (status) {
       this.border = 'drop-border';
@@ -531,6 +532,10 @@ export default class CMarkdownEditor extends Vue {
     @media (max-width: 455px) {
       display: none;
     }
+  }
+
+  label {
+    margin: 0;
   }
 
   .img-btn {

@@ -26,7 +26,7 @@
 			<hr />
 			<b-row>
 				<b-col md="8">
-          <h3 style="margin-bottom: 0">{{ report.title || `Отчёт (${date})` }}</h3>
+          <h3 style="margin-bottom: 0">{{ report.name || `Отчёт (${date})` }}</h3>
 
 					<br />
           <p><b>{{ author }}</b></p>
