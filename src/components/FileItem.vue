@@ -22,11 +22,11 @@
       <hr />
 			<b-row>
 				<b-col md="8">
-          <h3 style="margin-bottom: 0">{{ file.filename }}</h3>
+          <h3 style="margin-bottom: 0; text-overflow: ellipsis; overflow: hidden">{{ file.filename }}</h3>
 
 					<br />
           <b>Markdown для использования:</b>
-          <p>{{ link }}</p>
+          <p style="word-break: break-all;">{{ link }}</p>
         </b-col>
 				<b-col md="4">
           <div>
@@ -45,10 +45,13 @@
             v-if="copyText(true)"
             variant="primary"
             class="w-100"
+            style="margin-bottom: 8px;"
             @click="() => copyText(false)"
           >Скопирывать ссылку</b-button>
         </b-col>
-        <b-button @click="deleteFile" variant="danger" style="margin: 0 15px;">Удалить</b-button>
+        <b-col cols="12" md="auto">
+          <b-button class="w-100" @click="deleteFile" variant="danger">Удалить</b-button>
+        </b-col>
       </b-row>
     </div>
   </div>

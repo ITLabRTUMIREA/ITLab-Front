@@ -19,28 +19,20 @@
           </b-form-select>
 
           <h4 class="mt-4">Ваш отчёт</h4>
-          <b-form-input
-            v-model="name"
-            placeholder="Название отчёта"
-          >
-          </b-form-input>
-          <b-form-textarea
-            id="report"
-            rows="10"
-            v-model="report"
-            @drop="handleFile"
-            @dragenter="() => changeBorder(true)"
-            @dragleave="() => changeBorder(false)"
-            @dragover="(e) => e.preventDefault()"
-            :class="textareaBorder"
-          >
-          </b-form-textarea>
-
-          <b-row>
-            <b-button class="ml-md-auto mr-md-3" variant="primary" @click="sendReport">
-              Отправить
-            </b-button>
-          </b-row>
+          <markdown-editor v-model="report">
+            <template slot="title">
+              <b-form-input
+                v-model="name"
+                placeholder="Название отчёта"
+              >
+              </b-form-input>
+            </template>
+            <template slot="actionButton">
+              <b-button class="ml-md-auto" style="margin-top: 8px;" variant="primary" @click="sendReport">
+                Отправить
+              </b-button>
+            </template>
+          </markdown-editor>
         </b-tab>
         <b-tab title="Отчёты обо мне">
           <br />
@@ -98,19 +90,18 @@ import {
 } from '../../modules/users';
 
 import {
-  IReportFile,
   IReportTypeDefault,
   REPORTS_FETCH_ALL,
   REPORT_FILES_GET_ALL,
   REPORTS_GET_ALL,
   REPORT_COMMIT,
-  REPORT_FILE_COMMIT,
   REPORT_FILE_FETCH_ALL
 } from '../../modules/reports';
 import CReportItem, { ReportImplementer } from '../../components/ReportItem.vue';
 import { IReportSalary, REPORT_SALARY_FETCH_ALL } from '../../modules/salary';
-import { getResponseData } from '../../stuff';
 import CFileItem from '../../components/FileItem.vue';
+
+import CMarkdownEditor from '../../components/MarkdownEditor.vue';
 
 const LOCAL_STORAGE_API_URL = 'api-url';
 
@@ -118,8 +109,9 @@ const LOCAL_STORAGE_API_URL = 'api-url';
   components: {
     'page-content': CPageContent,
     'report-item': CReportItem,
-    'file-item': CFileItem
-  }
+    'file-item': CFileItem,
+    'markdown-editor': CMarkdownEditor
+  },
 })
 export default class ReportsPage extends Vue {
   // Properties //
@@ -139,9 +131,6 @@ export default class ReportsPage extends Vue {
   public baseAddress: string = location.origin;
   public accessToken?: string | null;
   public filesBaseAddress?: string = configuration.VUE_APP_FILES_BASE_ADDRESS;
-  public filesLoading: boolean = false;
-
-  public border: string = '';
 
   public reportImplementer = {
     Me: ReportImplementer.Me,
@@ -163,12 +152,6 @@ export default class ReportsPage extends Vue {
         this.$store.dispatch(REPORT_SALARY_FETCH_ALL, this.subject);
       })
       .catch();
-
-    if (localStorage.getItem('reportText') !== null) {
-      this.report = localStorage.getItem('reportText') || '';
-    }
-
-    setInterval(() => localStorage.setItem('reportText', this.report), 1000);
   }
 
   // Methods //
@@ -193,59 +176,6 @@ export default class ReportsPage extends Vue {
       });
   }
 
-  public async handleFile(e: DragEvent) {
-    e.preventDefault();
-    this.changeBorder(false);
-
-    const files: File[] = [];
-
-    // @ts-ignore
-    if (e.dataTransfer.items) {
-      // @ts-ignore
-      for (const item of e.dataTransfer.items) {
-        if (item.kind === 'file') {
-          files.push(item.getAsFile());
-        }
-      }
-    } else {
-      // @ts-ignore
-      for (const file of e.dataTransfer.files) {
-        if (file) {
-          files.push(file);
-        }
-      }
-    }
-
-    const area = document.getElementById('report') as HTMLTextAreaElement;
-    if (area.selectionStart || area.selectionEnd === 0 && files.length > 0) {
-      this.filesLoading = true;
-
-      const end = area.selectionEnd;
-      for (const file of files) {
-
-        this.report = this.report.substring(0, end) + `\n[Uploading ${file.name}...]()\n`
-          + this.report.substring(end, this.report.length);
-
-        const fileData = (await this.$store.dispatch(REPORT_FILE_COMMIT, file));
-
-        const isImg = /[w]*.(jpg|png|gif)$/.test(fileData.filename.toLowerCase());
-
-        this.report = this.report.replace(
-          `[Uploading ${file.name}...]()`,
-          `${isImg ? '!' : ''}[${fileData.filename}](${this.origin}mfs/download/${fileData.id})`
-        );
-      }
-    }
-  }
-
-  public changeBorder(status: boolean) {
-    if (status) {
-      this.border = 'drop-border';
-    } else {
-      this.border = '';
-    }
-  }
-
   get reportsAboutMe() {
     return (this.$store.getters[REPORTS_GET_ALL] as IReportTypeDefault[]).filter((report) =>
       report.assignees.implementer.indexOf(this.subject) > -1
@@ -265,19 +195,6 @@ export default class ReportsPage extends Vue {
 
   get files() {
     return this.$store.getters[REPORT_FILES_GET_ALL];
-  }
-
-  get textareaBorder() {
-    return this.border;
-  }
-
-  get origin(): string {
-    console.log(location.origin);
-    if (location.origin.indexOf(':') > -1) {
-      return localStorage.getItem('api-url') || '';
-    } else {
-      return location.origin + '/api/';
-    }
   }
 }
 
@@ -302,8 +219,14 @@ select {
   }
 }
 
-.drop-border {
-  box-shadow: -1px 1px 0 #007bff, 1px -1px 0 #007bff, -1px -1px 0 #007bff, 1px 1px 0 #007bff;
+.theme-dark select {
+  background-color: #1e1e1e;
+  border-color: #555555;
+
+  > * {
+    color: #d6d6d6 !important;
+    background: #333333;
+  }
 }
 </style>
 <!-- STYLE END -->
