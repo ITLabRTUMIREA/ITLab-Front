@@ -46,39 +46,6 @@ Vue.component(MarkdownItVue.name, MarkdownItVue);
     }
 })
 export default class ReportDetailPage extends Vue {
-  // Properties //
-  ///////////////
-
-  public loadingInProcess: boolean = false;
-
-  public report: ReportTypeDefault = new ReportTypeDefault();
-
-  // Component methods //
-  //////////////////////
-
-  public async mounted() {
-    this.loadingInProcess = true;
-
-    const reportId = this.$route.params.id;
-    if (reportId) {
-      this.$store.dispatch(REPORT_FETCH_ONE, reportId)
-        .then((report) => {
-          this.report = report;
-          this.loadingInProcess = false;
-        });
-    }
-  }
-
-  // Methods //
-  ////////////
-
-  get date(): string {
-    if (!this.report.date) {
-      return '';
-    }
-
-    return moment(this.report.date).format('DD.MM.YYYY');
-  }
 }
 
 export const reportDetailPageRoute: RouteConfig = {
