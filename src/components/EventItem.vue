@@ -18,7 +18,7 @@
             </span>
           </strong>
         </b-col>
-        <salary-item :id="event.id" :salary="eventSalary" :editable="false"></salary-item>
+        <salary-item :id="event.id" :salary="eventSalary" :editable="false" style="padding: 0 15px; margin: auto 0;"></salary-item>
         <b-col cols="auto" v-if="canEditEvent">
           <b-button
             variant="outline-warning"
