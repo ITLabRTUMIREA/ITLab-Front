@@ -64,6 +64,7 @@ export const actions: ActionTree<IEquipmentState, RootState> = {
         .get(`equipment/${id}`)
         .then((response) => getResponseData<IEquipment>(response))
         .then((equipment) => {
+          console.log(equipment);
           commit(EQUIPMENT_SET_ONE, equipment);
           resolve(equipment);
         })
@@ -111,9 +112,10 @@ export const actions: ActionTree<IEquipmentState, RootState> = {
 
       request
         .then((response) => getResponseData<IEquipment>(response))
-        .then((equipment) => {
-          commit(EQUIPMENT_SET_ONE, equipment);
-          resolve(equipment);
+        .then((newEquipment) => {
+          newEquipment.equipmentType = equipment.equipmentType;
+          commit(EQUIPMENT_SET_ONE, newEquipment);
+          resolve(newEquipment);
         })
         .catch((error) => {
           console.log(EQUIPMENT_COMMIT, error);
