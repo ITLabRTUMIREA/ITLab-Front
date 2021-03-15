@@ -185,6 +185,7 @@ const vueLifecycles = singleSpaVue({
   },
 });
 
+export const manager = userManager;
 export const bootstrap = vueLifecycles.bootstrap;
 export const mount = vueLifecycles.mount;
 export const unmount = vueLifecycles.unmount;

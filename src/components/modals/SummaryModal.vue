@@ -115,7 +115,7 @@ export default class CSummaryModal extends Vue {
   }
 
   @Watch('selected')
-  onSelectedChanged(val: Array<string>, oldVal: Array<string>) {
+  public onSelectedChanged(val: string[], oldVal: string[]) {
     if (val.length === 0) {
       this.allSelected = false;
       this.indeterminate = false;
@@ -131,10 +131,10 @@ export default class CSummaryModal extends Vue {
   // Methods //
   ////////////
 
-  private toggleAll(checked: boolean) {
-    let values: Array<string> = [];
+  public toggleAll(checked: boolean) {
+    const values: string[] = [];
 
-    this.options.forEach(option => values.push(option.value));
+    this.options.forEach((option) => values.push(option.value));
 
     this.selected = checked ? values.slice() : [];
   }
