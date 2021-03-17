@@ -91,16 +91,13 @@ import {
   IEquipment,
   EquipmentDefault,
   IEquipmentType,
-  EquipmentTypeDefault,
   EQUIPMENT_FETCH_ONE,
   EQUIPMENT_COMMIT,
-  EQUIPMENT_DELETE,
-  equipment
+  EQUIPMENT_DELETE
 } from '@/modules/equipment';
 
 import {
   IUser,
-  UserDefault,
   USER_ASSIGN_EQUIPMENT,
   USER_REMOVE_EQUIPMENT
 } from '@/modules/users';
@@ -190,6 +187,7 @@ export default class EquipmentEditPage extends Vue {
     }
 
     this.pageState = State.InProcess;
+    this.equipment.equipmentType = this.equipment.equipmentType || undefined;
     this.equipment.equipmentTypeId =
       (this.equipment.equipmentType && this.equipment.equipmentType.id) || '';
 

@@ -57,7 +57,7 @@
                 :href="`https://maps.yandex.ru/?text=${ encodeURIComponent(event.address) }`"
                 target="_blank"
               >{{ event.address }}</a>
-              <hr class="d-block d-md-none" />
+              <hr class="d-block d-md-none" v-if="event.description" />
             </b-col>
           </b-row>
           <hr />

@@ -92,7 +92,6 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { RouteConfig } from 'vue-router';
-import axios from 'axios';
 
 import CMailLink from '@/components/stuff/MailLink.vue';
 import CPageContent from '@/components/layout/PageContent.vue';
@@ -103,7 +102,6 @@ import 'vue-awesome/icons/plus';
 
 import {
   IEquipment,
-  IEquipmentType,
   EQUIPMENT_FETCH_ALL,
   EQUIPMENT_GET_ALL
 } from '@/modules/equipment';
