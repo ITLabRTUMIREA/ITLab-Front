@@ -4,16 +4,18 @@ import { RootState } from '@/store';
 import { actions } from './actions';
 import { getters } from './getters';
 import { mutations } from './mutations';
-import { IEventSalaryState } from './types';
+import { ISalaryState } from './types';
 
 export * from './types';
 
-export const state: IEventSalaryState = {
+export const state: ISalaryState = {
     eventSalaries: [],
+    reportsSalaries: []
 };
 
-export const salary: Module<IEventSalaryState, RootState> = {
+export const salary: Module<ISalaryState, RootState> = {
   state,
   actions,
   getters,
+  mutations
 };

@@ -1,5 +1,4 @@
 import Oidc from 'oidc-client';
-import configuration from './stuff/configuration';
 
 export class UserManager {
 
@@ -41,6 +40,20 @@ export class UserManager {
     }
     localStorage.setItem('accessToken', user.access_token);
     return user.access_token;
+  }
+
+  public checkITLabClaim(claim: string): boolean | null {
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+      return null;
+    }
+    
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    if (!payload || !payload.itlab) {
+      return false;
+    }
+
+    return JSON.stringify(payload.itlab).includes(claim);
   }
 
   public async getUserRoles(): Promise<any> {

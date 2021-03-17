@@ -32,7 +32,6 @@ import {
   EVENT_ROLES_SET_ONE,
   EVENT_ROLES_REMOVE_ONE
 } from './types';
-import { IEventSalary, ShiftSalaryDefault, IEventSalaryState } from '../salary';
 
 const DATETIME_FORMAT = 'YYYY-MM-DDTHH:mm:ss';
 
