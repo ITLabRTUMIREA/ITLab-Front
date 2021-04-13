@@ -7,6 +7,33 @@ name: $(BuildID)-$(Build.SourceBranchName)
 pool:
   vmImage: "ubuntu-latest"
 
+variables:
+  ${{ if notIn(variables['Build.SourceBranchName'], 'master', 'develop') }}:
+    buildCommand: 'run developbuild'
+    buildImage: false
+    deployService: false
+    deployEnvironment: 'no'
+    imageTags: 'no'
+    serviceName: 'no'
+  ${{ if eq(variables['Build.SourceBranchName'], 'develop') }}:
+    buildCommand: 'run developbuild'
+    buildImage: true
+    deployService: true
+    deployEnvironment: development
+    imageTags: |
+      $(Build.BuildId)
+      develop
+    serviceName: itlab-develop-front
+  ${{ if eq(variables['Build.SourceBranchName'], 'master') }}:
+    buildCommand: 'run build'
+    buildImage: true
+    deployService: true
+    deployEnvironment: production
+    imageTags: |
+      $(Build.BuildId)
+      latest
+    serviceName: itlab-front
+
 stages:
 - stage: Build
   jobs:
@@ -20,14 +47,11 @@ stages:
       displayName: npm run build
       inputs:
         command: 'custom'
-        customCommand: 'run build'
-    - task: PublishBuildArtifacts@1
-      displayName: publish build artifact itlab-front-build
-      inputs:
-        PathtoPublish: "deploy"
-        ArtifactName: "itlab-front-build"
+        customCommand: buildCommand
+    - publish: deploy
+      artifact: itlab-front-build
 - stage: PackInDocker
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  condition: and(succeeded(), ${{variables.buildImage}})
   jobs:
   - job: PackFront
     steps:
@@ -41,16 +65,14 @@ stages:
           command: 'buildAndPush'
           Dockerfile: '$(Pipeline.Workspace)/itlab-front-build/Dockerfile'
           buildContext: '$(Pipeline.Workspace)/itlab-front-build'
-          tags: |
-            $(Build.BuildId)
-            latest
+          tags: ${{variables.imageTags}}
 - stage: UpdateService
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  condition: and(succeeded(), ${{variables.deployService}})
   jobs:
   - deployment: Deploy
     pool:
       vmImage: 'ubuntu-latest'
-    environment: 'production'
+    environment: ${{variables.deployEnvironment}}
     strategy:
       runOnce:
         deploy:
@@ -60,5 +82,5 @@ stages:
               inputs:
                 sshEndpoint: 'swarm manager'
                 runOptions: 'commands'
-                commands: 'docker service update --image rtuitlab/itlab-front:$(Build.BuildId) itlab_front'
+                commands: 'docker service update --image rtuitlab/itlab-front:$(Build.BuildId) ${{variables.serviceName}}'
                 readyTimeout: '20000'
