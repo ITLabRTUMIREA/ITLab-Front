@@ -46,6 +46,9 @@ import { projectsPageRoute, projectEditPageRoute } from '@/views/projects';
 // @ts-ignore
 import { profilePageRoute } from '@/views/profile';
 
+// @ts-ignore
+import { reportsPageRoute, reportPageRoute } from '@/views/reports';
+
 
 import {
   // @ts-ignore
@@ -57,9 +60,7 @@ import {
   // @ts-ignore,
   typeEditPageRoute,
   // @ts-ignore
-  backendSelectionPageRoute,
-  // @ts-ignore
-  reportsPageRoute
+  backendSelectionPageRoute
 } from '@/views/system';
 
 export const state: ILayoutState = {
@@ -106,13 +107,15 @@ export const state: ILayoutState = {
           name: 'projects',
           title: 'Проекты (в разработке)',
           homeURL: '/projects',
-          pages: [projectsPageRoute, projectEditPageRoute]
+          pages: [projectsPageRoute, projectEditPageRoute],
+          anotherFrontEnd: true
         },
         {
           name: 'reports',
           title: 'Отчеты (тестирование)',
           homeURL: `/reports`,
-          pages: [reportsPageRoute]
+          pages: [reportsPageRoute, reportPageRoute],
+          anotherFrontEnd: true
         }
       ]
     },

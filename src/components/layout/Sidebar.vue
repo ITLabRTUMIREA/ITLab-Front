@@ -1,6 +1,7 @@
 <!-- TEMPLATE BEGIN -->
 <template>
   <div class="c-sidebar" @click="toggleMenu($event)" v-bind:class="{ 'mobile-hidden': isMobileMenuHidden }">
+    <div v-if="!isMobileMenuHidden" style="width: 100vw; height: 100vh;" @click="toggleMenu($event, true)"></div>
     <span class="menu-open" @click="toggleMenu($event, false)">
       <svgicon name="bars" height="32" class="bars"></svgicon>
     </span>

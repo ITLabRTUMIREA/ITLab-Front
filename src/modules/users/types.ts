@@ -25,6 +25,7 @@ export const USER_PROPERTY_TYPES_SET_ALL = 'USER_PROPERTY_TYPES_SET_ALL';
 
 // getters
 export const USERS_GET_ALL = 'USERS_GET_ALL';
+export const USERS_GET_ALL_LIST = 'USERS_GET_ALL_LIST';
 export const USERS_GET_ONE = 'USERS_GET_ONE';
 export const USER_ROLES_GET_ALL = 'USER_ROLES_GET_ALL';
 export const USER_PROPERTY_TYPES_GET_ALL = 'USER_PROPERTY_TYPES_GET_ALL';
@@ -89,6 +90,16 @@ export class UserDefault {
 }
 
 export interface IUser extends UserDefault {}
+
+// UserList //
+/////////////
+
+export class UserList {
+  public text: string = '';
+  public value: string = '';
+}
+
+export interface IUserList extends UserList { }
 
 // State //
 //////////

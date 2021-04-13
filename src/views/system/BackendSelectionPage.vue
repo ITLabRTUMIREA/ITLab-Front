@@ -34,6 +34,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 import { RouteConfig } from 'vue-router';
 import axios from 'axios';
+import configuration from '../../stuff/configuration';
 
 const LOCAL_STORAGE_API_URL = 'api-url';
 
@@ -70,7 +71,7 @@ export default class BackendSelectionPage extends Vue {
   }
 
   public resetDefaults() {
-    this.setApiUrl(process.env.VUE_APP_API_URL || '/api/');
+    this.setApiUrl(configuration.VUE_APP_API_URL || '/api/');
   }
 
   public setApiUrl(url: string) {

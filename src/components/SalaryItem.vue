@@ -179,4 +179,10 @@ export default class CSalaryItem extends Vue {
 .salary__count__description {
   color: #007bff;
 }
+
+.theme-dark {
+  & .salary__count_new {
+    color: #D6D6D6;
+  }
+}
 </style>

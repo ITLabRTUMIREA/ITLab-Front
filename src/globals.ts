@@ -10,6 +10,7 @@ export class Globals {
   public DATETIME_WEEKDAY_FORMAT: string = 'ddd, DD.MM.YYYY HH:mm';
   public DATE_FORMAT: string = 'DD.MM.YYYY';
   public TIME_FORMAT: string = 'HH:mm';
+  public FRONT_POSTFIX: string = '/front/front/';
 
   public hasRole(userRole: UserRoleName): boolean {
     return store.getters[PROFILE_HAS_ROLE](userRole);

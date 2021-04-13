@@ -5,10 +5,31 @@
       <template slot="modal-title">
         Итоговый отчёт
       </template>
-
-      <b-form-group>
+      
+      <b-form-group label="Выберите период:">
+        <b-row>
+          <b-col cols="12" sm="6" md="12" lg="6" class="mt-3">
+            <date-picker class="w-100" v-model="startDate" lang="ru" type="date" format="DD.MM.YYYY"></date-picker>
+          </b-col>
+          <b-col cols="12" sm="6" md="12" lg="6" class="mt-3">
+            <date-picker class="w-100" v-model="endDate" lang="ru" type="date" format="DD.MM.YYYY"></date-picker>
+          </b-col>
+          <br />
+        </b-row>
+      </b-form-group>
+      
+      <b-form-group label="Выберите тип:">
         <h5 v-if="options.length === 0">Нет событий.</h5>
+        <b-form-checkbox v-else
+          :indeterminate="indeterminate"
+          v-model="allSelected"
+          @change="toggleAll"
+        >
+          Выбрать всё
+        </b-form-checkbox>
+
         <b-form-checkbox-group
+          id="selected"
           stacked
           v-model="selected"
           :options="options"
@@ -25,7 +46,7 @@
         <button
           type="button"
           class="btn btn-primary"
-          :disabled="selected.length == 0 || isModalInProcess"
+          :disabled="isModalInProcess"
           @click="onSubmitModal"
         >Скачать</button>
       </template>
@@ -38,10 +59,15 @@
 <!-- SCRIPT BEGIN -->
 <script lang="ts">
 import axios from 'axios';
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import { IEventType, EVENT_TYPES_FETCH_ALL } from '@/modules/events';
+import DatePicker from 'vue2-datepicker';
 
-@Component
+@Component({
+  components: {
+    'date-picker': DatePicker
+  }
+})
 export default class CSummaryModal extends Vue {
   // v-modal //
   ////////////
@@ -59,12 +85,21 @@ export default class CSummaryModal extends Vue {
   public options: Array<{ text: string; value: string }> = [];
   public selected: string[] = [];
 
+  public startDate: Date = new Date();
+  public endDate: Date = new Date();
+
   private visibilityStuff: boolean = false;
+
+  private allSelected: boolean = false;
+  private indeterminate: boolean = false;
 
   // Component methods //
   //////////////////////
 
   public mounted() {
+    this.endDate = new Date();
+    this.startDate = new Date(new Date().setUTCFullYear(new Date().getUTCFullYear() - 1));
+
     this.$watch('value', (value: boolean) => {
       this.visibilityStuff = value;
     });
@@ -79,19 +114,44 @@ export default class CSummaryModal extends Vue {
       });
   }
 
+  @Watch('selected')
+  public onSelectedChanged(val: string[], oldVal: string[]) {
+    if (val.length === 0) {
+      this.allSelected = false;
+      this.indeterminate = false;
+    } else if (val.length === this.options.length) {
+      this.allSelected = true;
+      this.indeterminate = false;
+    } else {
+      this.allSelected = false;
+      this.indeterminate = true;
+    }
+  }
+
   // Methods //
   ////////////
+
+  public toggleAll(checked: boolean) {
+    const values: string[] = [];
+
+    this.options.forEach((option) => values.push(option.value));
+
+    this.selected = checked ? values.slice() : [];
+  }
 
   public async onSubmitModal() {
     this.isModalInProcess = true;
 
     let data: any = null;
+
     return new Promise((resolve, reject) => {
+      let types = '';
+      for (const S of this.selected) {
+        types += `&eventTypeId=${S}`;
+      }
+
       axios
-        .post('summary',
-          {
-            targetEventTypes: this.selected
-          },
+        .get(`docsgen/downloadxls?begin=${this.startDate.toISOString().slice(0, 10)}&end=${this.endDate.toISOString().slice(0, 10)}${types}`,
           {
             responseType: 'blob'
           }
@@ -102,7 +162,7 @@ export default class CSummaryModal extends Vue {
           const url = window.URL.createObjectURL(new Blob([data]));
           const link = document.createElement('a');
           link.href = url;
-          link.setAttribute('download', 'summary.xlsx');
+          link.setAttribute('download', 'svodka.xlsx');
           document.body.appendChild(link);
           link.click();
           this.isModalInProcess = false;
@@ -120,6 +180,7 @@ export default class CSummaryModal extends Vue {
         })
         .catch((error) => {
           console.log(error);
+          this.isModalInProcess = false;
           reject(error);
         });
     });
@@ -142,5 +203,12 @@ export default class CSummaryModal extends Vue {
 
 <!-- STYLE BEGIN -->
 <style lang="scss">
+@import '@/styles/general.scss';
+
+.nav-tabs {
+  .nav-item .nav-link {
+    border: none;
+  }
+}
 </style>
 <!-- STYLE END -->

@@ -9,6 +9,7 @@ import { users } from '@/modules/users';
 import { notifications } from '@/modules/notifications';
 import { projects } from '@/modules/projects';
 import { salary } from '@/modules/salary';
+import { reports } from '@/modules/reports';
 
 Vue.use(Vuex);
 
@@ -23,7 +24,8 @@ const store: StoreOptions<RootState> = {
     users,
     notifications,
     projects,
-    salary
+    salary,
+    reports
   }
 };
 

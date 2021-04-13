@@ -52,26 +52,26 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { RouteConfig } from 'vue-router';
-
+import configuration from '../../stuff/configuration';
 @Component
 export default class AboutPage extends Vue {
   // Computed data //
   //////////////////
 
   get azureOrganizationUrl(): string {
-    return process.env.VUE_APP_AZURE_ORGANIZATION || '';
+    return configuration.VUE_APP_AZURE_ORGANIZATION || '';
   }
 
   get buildId(): string {
-    return process.env.VUE_APP_BUILD_ID || '';
+    return configuration.VUE_APP_BUILD_ID || '';
   }
 
   get repositoryUrl(): string {
-    return process.env.VUE_APP_REPOSITORY || '';
+    return configuration.VUE_APP_REPOSITORY || '';
   }
 
   get lastCommitId(): string {
-    return process.env.VUE_APP_LAST_COMMIT || '';
+    return configuration.VUE_APP_LAST_COMMIT || '';
   }
 }
 

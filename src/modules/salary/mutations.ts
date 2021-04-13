@@ -1,12 +1,13 @@
 import { MutationTree } from 'vuex';
-import { Vue } from 'vue-property-decorator';
-
-import { setOneElement } from '@/stuff';
 
 import {
-  IEventSalaryState,
+  IReportSalary,
+  ISalaryState,
+  REPORT_SALARY_SET_ALL
 } from './types';
 
-export const mutations: MutationTree<IEventSalaryState> = {
-
+export const mutations: MutationTree<ISalaryState> = {
+  [REPORT_SALARY_SET_ALL]: (state, payload: IReportSalary[]) => {
+    state.reportsSalaries = payload;
+  }
 };
