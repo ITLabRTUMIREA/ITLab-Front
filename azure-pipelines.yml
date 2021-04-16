@@ -23,7 +23,7 @@ variables:
     imageTags: |
       $(Build.BuildId)
       develop
-    serviceName: itlab-develop-front
+    serviceName: itlab-develop_front
   ${{ if eq(variables['Build.SourceBranchName'], 'master') }}:
     buildCommand: 'run build'
     buildImage: true
