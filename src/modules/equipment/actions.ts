@@ -64,7 +64,6 @@ export const actions: ActionTree<IEquipmentState, RootState> = {
         .get(`equipment/${id}`)
         .then((response) => getResponseData<IEquipment>(response))
         .then((equipment) => {
-          console.log(equipment);
           commit(EQUIPMENT_SET_ONE, equipment);
           resolve(equipment);
         })

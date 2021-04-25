@@ -1,0 +1,52 @@
+{
+  "part": 1,
+  "groups": [
+    {
+      "name": "general",
+      "title": "Общее",
+      "sections": [
+        {
+          "name": "profile",
+          "title": "Профиль",
+          "homeURL": "/profile"
+        },
+        {
+          "name": "notifications",
+          "title": "Уведомления",
+          "homeURL": "/notifications"
+        },
+        {
+          "name": "events",
+          "title": "События",
+          "homeURL": "/events"
+        },
+        {
+          "name": "equipment",
+          "title": "Оборудование",
+          "homeURL": "/equipment"
+        }
+      ]
+    },
+    {
+      "name": "system",
+      "title": "Система",
+      "sections": [
+        {
+          "name": "users",
+          "title": "Пользователи",
+          "homeURL": "/users"
+        },
+        {
+          "name": "typeEdit",
+          "title": "Типы",
+          "homeURL": "/type_edit"
+        },
+        {
+          "name": "profileSettings",
+          "title": "Настройки",
+          "homeURL": "/settings"
+        }
+      ]
+    }
+  ]
+}
