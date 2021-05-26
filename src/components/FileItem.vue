@@ -47,7 +47,7 @@
             class="w-100"
             style="margin-bottom: 8px;"
             @click="() => copyText(false)"
-          >Скопирывать ссылку</b-button>
+          >Скопировать ссылку</b-button>
         </b-col>
         <b-col cols="12" md="auto">
           <b-button class="w-100" @click="deleteFile" variant="danger">Удалить</b-button>
