@@ -7,6 +7,33 @@ name: $(BuildID)-$(Build.SourceBranchName)
 pool:
   vmImage: "ubuntu-latest"
 
+variables:
+  ${{ if notIn(variables['Build.SourceBranchName'], 'master', 'develop') }}:
+    buildCommand: 'run developbuild'
+    buildImage: false
+    deployService: false
+    deployEnvironment: 'no'
+    imageTags: 'no'
+    serviceName: 'no'
+  ${{ if eq(variables['Build.SourceBranchName'], 'develop') }}:
+    buildCommand: 'run developbuild'
+    buildImage: true
+    deployService: true
+    deployEnvironment: development
+    imageTags: |
+      $(Build.BuildId)
+      develop
+    serviceName: itlab-develop_front
+  ${{ if eq(variables['Build.SourceBranchName'], 'master') }}:
+    buildCommand: 'run build'
+    buildImage: true
+    deployService: true
+    deployEnvironment: production
+    imageTags: |
+      $(Build.BuildId)
+      latest
+    serviceName: itlab-front
+
 stages:
 - stage: Build
   jobs:
@@ -20,14 +47,11 @@ stages:
       displayName: npm run build
       inputs:
         command: 'custom'
-        customCommand: 'run build'
-    - task: PublishBuildArtifacts@1
-      displayName: publish build artifact itlab-front-build
-      inputs:
-        PathtoPublish: "deploy"
-        ArtifactName: "itlab-front-build"
+        customCommand: ${{variables.buildCommand}}
+    - publish: deploy
+      artifact: itlab-front-build
 - stage: PackInDocker
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  condition: and(succeeded(), ${{variables.buildImage}})
   jobs:
   - job: PackFront
     steps:
@@ -35,22 +59,30 @@ stages:
       - download: current
         artifact: itlab-front-build
       - task: Docker@2
+        displayName: Build image for docker hub
         inputs:
           containerRegistry: 'rtuitlab connection by admin'
           repository: 'rtuitlab/itlab-front'
           command: 'buildAndPush'
           Dockerfile: '$(Pipeline.Workspace)/itlab-front-build/Dockerfile'
           buildContext: '$(Pipeline.Workspace)/itlab-front-build'
-          tags: |
-            $(Build.BuildId)
-            latest
+          tags: ${{variables.imageTags}}
+      - task: Docker@2
+        displayName: Build image for private docker registry
+        inputs:
+          containerRegistry: 'private rtuitlab registry'
+          repository: 'rtuitlab/itlab-front'
+          command: 'buildAndPush'
+          Dockerfile: '$(Pipeline.Workspace)/itlab-front-build/Dockerfile'
+          buildContext: '$(Pipeline.Workspace)/itlab-front-build'
+          tags: ${{variables.imageTags}}
 - stage: UpdateService
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  condition: and(succeeded(), ${{variables.deployService}})
   jobs:
   - deployment: Deploy
     pool:
       vmImage: 'ubuntu-latest'
-    environment: 'production'
+    environment: ${{variables.deployEnvironment}}
     strategy:
       runOnce:
         deploy:
@@ -60,5 +92,5 @@ stages:
               inputs:
                 sshEndpoint: 'swarm manager'
                 runOptions: 'commands'
-                commands: 'docker service update --image rtuitlab/itlab-front:$(Build.BuildId) itlab_front'
+                commands: 'docker service update --image registry.rtuitlab.dev/rtuitlab/itlab-front:$(Build.BuildId) ${{variables.serviceName}} --with-registry-auth'
                 readyTimeout: '20000'
