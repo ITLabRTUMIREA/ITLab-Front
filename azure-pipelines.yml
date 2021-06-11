@@ -32,7 +32,7 @@ variables:
     imageTags: |
       $(Build.BuildId)
       latest
-    serviceName: itlab-front
+    serviceName: itlab_front
 
 stages:
 - stage: Build
