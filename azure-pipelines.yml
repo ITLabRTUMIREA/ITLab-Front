@@ -32,7 +32,7 @@ variables:
     imageTags: |
       $(Build.BuildId)
       latest
-    serviceName: itlab-front
+    serviceName: itlab_front
 
 stages:
 - stage: Build
@@ -59,8 +59,18 @@ stages:
       - download: current
         artifact: itlab-front-build
       - task: Docker@2
+        displayName: Build image for docker hub
         inputs:
           containerRegistry: 'rtuitlab connection by admin'
+          repository: 'rtuitlab/itlab-front'
+          command: 'buildAndPush'
+          Dockerfile: '$(Pipeline.Workspace)/itlab-front-build/Dockerfile'
+          buildContext: '$(Pipeline.Workspace)/itlab-front-build'
+          tags: ${{variables.imageTags}}
+      - task: Docker@2
+        displayName: Build image for private docker registry
+        inputs:
+          containerRegistry: 'private rtuitlab registry'
           repository: 'rtuitlab/itlab-front'
           command: 'buildAndPush'
           Dockerfile: '$(Pipeline.Workspace)/itlab-front-build/Dockerfile'
@@ -82,5 +92,5 @@ stages:
               inputs:
                 sshEndpoint: 'swarm manager'
                 runOptions: 'commands'
-                commands: 'docker service update --image rtuitlab/itlab-front:$(Build.BuildId) ${{variables.serviceName}}'
+                commands: 'docker service update --image registry.rtuitlab.dev/rtuitlab/itlab-front:$(Build.BuildId) ${{variables.serviceName}} --with-registry-auth'
                 readyTimeout: '20000'
