@@ -1,6 +1,7 @@
 <!-- TEMPLATE BEGIN -->
 <template>
   <div class="projects-page">
+    <vue-headful title="Проекты"></vue-headful>
     <page-content>
       <template slot="header">Проекты</template>
 
@@ -15,18 +16,9 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { RouteConfig } from 'vue-router';
-import axios from 'axios';
 import Icon from 'vue-awesome/components/Icon';
 
-import {
-  IProject,
-  PROJECTS_FETCH_ALL,
-  PROJECTS_GET_ALL,
-  PROJECT_DELETE
-} from '@/modules/projects';
-
 import CPageContent from '@/components/layout/PageContent.vue';
-import { log } from 'util';
 
 @Component({
   components: {
@@ -44,8 +36,6 @@ export default class ProjectsPage extends Vue {
 
   public loadingInProcess: boolean = true;
   public projects: any[] = [];
-
-  private canEditUserPropertyTypes: boolean | null = false;
 }
 
 export const projectsPageRoute: RouteConfig = {

@@ -41,7 +41,7 @@ import {
 import { equipmentPageRoute, equipmentEditPageRoute } from '@/views/equipment';
 
 // @ts-ignore
-import { projectsPageRoute, projectEditPageRoute } from '@/views/projects';
+import { projectsPageRoute } from '@/views/projects';
 
 // @ts-ignore
 import { feedbackPageRoute } from '@/views/feedback';
@@ -110,7 +110,7 @@ export const state: ILayoutState = {
           name: 'projects',
           title: 'Проекты (в разработке)',
           homeURL: '/projects',
-          pages: [projectsPageRoute, projectEditPageRoute],
+          pages: [projectsPageRoute],
           anotherFrontEnd: true
         },
         {
