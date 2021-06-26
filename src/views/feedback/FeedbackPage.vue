@@ -1,6 +1,7 @@
 <!-- TEMPLATE BEGIN -->
 <template>
-  <div class="projects-page">
+  <div class="feedback-page">
+    <vue-headful title="Обратная связь"></vue-headful>
     <page-content>
       <template slot="header">Обратная связь</template>
 
