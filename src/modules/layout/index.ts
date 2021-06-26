@@ -47,6 +47,9 @@ import { projectsPageRoute } from '@/views/projects';
 import { feedbackPageRoute } from '@/views/feedback';
 
 // @ts-ignore
+import { purchasesPageRoute } from '@/views/purchases';
+
+// @ts-ignore
 import { profilePageRoute } from '@/views/profile';
 
 // @ts-ignore
@@ -125,6 +128,13 @@ export const state: ILayoutState = {
           title: 'Обратная связь',
           homeURL: `/feedback`,
           pages: [feedbackPageRoute],
+          anotherFrontEnd: true
+        },
+        {
+          name: 'purchases',
+          title: 'Покупки',
+          homeURL: `/purchases`,
+          pages: [purchasesPageRoute],
           anotherFrontEnd: true
         }
       ]
